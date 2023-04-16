@@ -57,6 +57,10 @@ import socket
 import csv
 import ipinfo
 import ipaddress
+import pyfiglet
+
+ascii_banner = pyfiglet.figlet_format("THE HARRY SCANNER")
+print(ascii_banner)
 
 
 # Initialize ipinfo client
