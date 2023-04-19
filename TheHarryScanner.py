@@ -1,54 +1,22 @@
-# This script is a Python program that scans for open ports on one or more IP addresses and writes the results to a CSV file. It uses the socket module to create a socket object for each IP and port combination and attempts to connect to it to determine if the port is open or closed. If the port is open, the script collects the banner (if available) and adds the IP address, port number, status, and banner to the results.
+# This script is a port scanner that can scan a single IP address or a range of IP addresses. It uses the socket library to create a socket object and connect to ports, and the tqdm library to provide a progress bar while scanning.
 
-# The script also uses the ipinfo module to geolocate the IP addresses and collect additional information about the IP address, such as the city, region, country, latitude, longitude, postal code, and time zone.
+# The script also uses the ipinfo library to get details about an IP address, such as the city, region, country, latitude, longitude, postal code, and time zone.
 
-# The ipaddress module is used to handle IP address ranges. The user can enter a single IP address or an IP address range in the format start_ip-end_ip.
+# After scanning, the script writes the results to a CSV file with the format "Host, Port, Service, Banner".
 
-# The script defines four functions:
+# The script begins with importing necessary libraries and dependencies like pyfiglet, tqdm, socket, csv, ipinfo, ipaddress. (You will need to input your own ipinfo.io access token on line 36)
 
-#    get_ip_details: Returns IP details for a given IP address using the ipinfo module.
-#    scan_ports: Scans for open ports on a given IP address and a list of ports.
-#    write_csv: Writes the results to a CSV file.
-#    print_details: Prints the geolocation details for a given IP address.
+# Next, the script defines the get_ip_details() function that takes an IP address as input, initializes an ipinfo client with an access token, and returns the details of the IP address.
 
-# The main function of the script prompts the user to enter an IP address or IP range, scans the ports of each IP address, and writes the results to a CSV file. It also prints the geolocation details for each IP address
+# Then, the script defines the scan_ports() function that takes an IP address and a list of ports as input, and returns a list of open ports and a list of scan results. This function iterates over the ports and uses the socket library to create a socket object and connect to each port. If the port is open, it appends the port number to the open_ports list and collects the banner. Then, it appends the scan results to the results list.
 
-# Note that the script requires the ipinfo library to be installed and an access token for the ipinfo API. You can obtain an access token by signing up for a free account on the ipinfo website. Techincally for better practise you could store the access_token variable instead of hard coding it, you can do this by creating a separate file named config.py and adding the access_token variable as a global variable in that file. Here's an example:
-# makefile
-# access_token = "3ed0f927b72bf1"
+# The script also defines the print_details() function that takes an IP address details dictionary as input and prints the relevant details.
 
-# Then, in your main script, you can import the access_token variable from the config.py file using the import statement:
-#     import config
-#     def get_ip_details(ip):
-#     Initialize ipinfo client
-#     handler = ipinfo.getHandler(config.access_token)
-#     Rest of the code ...
-    
-# Line 65 add your own ipinfo.io access_token to the variable
+# The scan_ip() function takes an IP address and a list of ports as input and scans the IP address for open ports using the scan_ports() function. It also gets the IP address details using the get_ip_details() function and prints them using the print_details() function.
 
-# If nothing happens, you can try running the program with the -u flag, which forces the output to be unbuffered and printed immediately. You can do this by running the following command:
-# python -u portscanner.py     --   although very unlikely to be needed
+# The write_csv() function takes the scan results and a filename as input and writes the results to a CSV file.
 
-# If you are running the code on a version of Python that does not support f-strings. This feature was introduced in Python 3.6. To fix this error, you can replace the f-string with string concatenation using the + operator, like this:
-# print("\nIP Address: " + ip_details['ip'])     -- You'll need to replace all f-strings in the code with this syntax however, so probably better to update and get the latest version of python and all other directories needed
-
-# Be sure to have ipinfo installed for Python 3.6.... You can run the following command to install ipinfo for Python 3.6:
-# python3.6 -m pip install ipinfo     --   no pip needed if you are on a later model
-
-# This should install ipinfo for Python 3.6 specifically. Once it is installed, try running your port scanner again with Python 3.6
-
-# python3.6 -m pip install --upgrade pip     -- This will upgrade pip to the latest version that's compatible with Python 3.6
-
-# Be sure to be in the /python directory and that inside you have   --   ipinfo, csv & socket installed so they are able to be imported
-
-# Feel free to add any extra print statements should they be needed for you, however I feel like there are plenty as it covers all bases
-
-# To write an IP range, you can do it as an input by separating the start IP and end IP with a hyphen (-), like this:
-# 192.168.0.1/24
-
-# In this script, the default range of ports being scanned is from 1 to 1000. It could take a few minutes to several hours, depending on the number of ports being scanned and the speed of the network connection. It is also worth noting that the settimeout() method is set to 0.5 seconds, which means that each port will be given half a second to respond. If a port takes longer to respond, the script will move on to the next port. Therefore, increasing the timeout value will increase the time it takes for the script to complete the scan.
-
-# In the final function input the script first initializes ip and ip_range to None and then asks the user which option they would like to use by prompting them to enter either '1' or '2'. Depending on the user's choice, the script then either prompts them for an IP address or an IP range... The input "193.176.30.20/24" specifies an IP address range to scan. In particular, it specifies a range of IP addresses with the prefix 193.176.30, and it will scan all the IP addresses in that range from 193.176.30.0 to 193.176.30.255. The "/24" at the end of the IP address specifies the number of bits in the network prefix, which in this case is 24. The network prefix determines which part of the IP address identifies the network and which part identifies the host within that network. In this case, the first three octets (i.e. 193.176.30) identify the network, while the last octet can take any value between 0 and 255 to identify individual hosts within that network. The first three octets (82.112.149) represent the network portion and the last octet (182) represents the host portion.
+# Finally, the script prompts the user to enter an option to scan a single IP address or a range of IP addresses, and then prompts for the IP address or IP range to scan. It then scans the IP addresses and writes the results to a CSV file.
 
 #!/bin/env python3
 
@@ -97,9 +65,6 @@ def scan_ports(ip, ports):
                 # Add to results
                 results.append((ip, port, "Open", banner))
                 print(f"Port {port} is open.")
-            else:
-                results.append((ip, port, "Closed", ""))
-
             sock.close()
         except KeyboardInterrupt:
             print("Scan interrupted by user.")
@@ -108,6 +73,7 @@ def scan_ports(ip, ports):
             pass
 
     return open_ports, results
+
 
 
 # Geolocate IP address
