@@ -26,6 +26,7 @@ import csv
 import ipinfo
 import ipaddress
 import pyfiglet
+import traceback
 
 ascii_banner = pyfiglet.figlet_format("THE HARRY SCANNER")
 print(ascii_banner)
@@ -46,36 +47,26 @@ def scan_ports(ip, ports):
     results = []
     open_ports = []
 
-    # Scan ports
     for port in tqdm.tqdm(ports):
         try:
-            # Create socket object
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(0.5)
-
-            # Connect to port
             result = sock.connect_ex((ip, port))
             if result == 0:
                 open_ports.append(port)
-
-                # Collect banner
-                banner = sock.recv(1024)
-                banner = banner.decode().strip()
-
-                # Add to results
-                results.append((ip, port, "Open", banner))
+                results.append((ip, port, "Open", ""))
                 print(f"Port {port} is open.")
             sock.close()
         except KeyboardInterrupt:
             print("Scan interrupted by user.")
             exit()
-        except:
-            pass
-
+        except Exception as e:
+            print(f"Error scanning port {port}: {e}")
+            traceback.print_exc()
+            
     return open_ports, results
 
-
-
+1
 # Geolocate IP address
 def print_details(ip_details):
     print(f"IP address: {ip_details['ip']}")
