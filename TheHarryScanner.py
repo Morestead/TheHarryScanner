@@ -1,24 +1,3 @@
-# This script is a port scanner that can scan a single IP address or a range of IP addresses. It uses the socket library to create a socket object and connect to ports, and the tqdm library to provide a progress bar while scanning.
-
-# The script also uses the ipinfo library to get details about an IP address, such as the city, region, country, latitude, longitude, postal code, and time zone.
-
-# After scanning, the script writes the results to a CSV file with the format "Host, Port, Service, Banner".
-
-# The script begins with importing necessary libraries and dependencies like pyfiglet, tqdm, socket, csv, ipinfo, ipaddress. (You will need to input your own ipinfo.io access token on line 36)
-
-# Next, the script defines the get_ip_details() function that takes an IP address as input, initializes an ipinfo client with an access token, and returns the details of the IP address.
-
-# Then, the script defines the scan_ports() function that takes an IP address and a list of ports as input, and returns a list of open ports and a list of scan results. This function iterates over the ports and uses the socket library to create a socket object and connect to each port. If the port is open, it appends the port number to the open_ports list and collects the banner. Then, it appends the scan results to the results list.
-
-# The script also defines the print_details() function that takes an IP address details dictionary as input and prints the relevant details.
-
-# The scan_ip() function takes an IP address and a list of ports as input and scans the IP address for open ports using the scan_ports() function. It also gets the IP address details using the get_ip_details() function and prints them using the print_details() function.
-
-# The write_csv() function takes the scan results and a filename as input and writes the results to a CSV file.
-
-# Finally, the script prompts the user to enter an option to scan a single IP address or a range of IP addresses, and then prompts for the IP address or IP range to scan. It then scans the IP addresses and writes the results to a CSV file.
-
-#!/bin/env python3
 
 import tqdm
 import socket
@@ -63,10 +42,9 @@ def scan_ports(ip, ports):
         except Exception as e:
             print(f"Error scanning port {port}: {e}")
             traceback.print_exc()
-            
+    
     return open_ports, results
 
-1
 # Geolocate IP address
 def print_details(ip_details):
     print(f"IP address: {ip_details['ip']}")
