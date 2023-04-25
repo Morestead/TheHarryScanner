@@ -2,7 +2,7 @@
 
 - This script is a port scanner that can scan a single IP address or a range of IP addresses. It uses the socket library to create a socket object and connect to ports, and the tqdm library to provide a progress bar while scanning.
 
-- The script also uses the ipinfo library to get details about an IP address, such as the city, region, country, latitude, longitude, postal code, and time zone. !!! (You will need to input your own ipinfo.io access token on line 36) !!!
+- The script also uses the ipinfo library to get details about an IP address, such as the city, region, country, latitude, longitude, postal code, and time zone. !!! (You will need to input your own ipinfo.io access token on line 16) !!!
 
 - After scanning, the script writes the results to a CSV file with the format "Host, Port, Service, Banner"
 
