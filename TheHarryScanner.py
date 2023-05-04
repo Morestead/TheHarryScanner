@@ -52,12 +52,15 @@ def print_details(ip_details):
         print(f"City: {ip_details['city']}")
     else:
         print("No city information available for this IP.")
-    print(f"Region: {ip_details['region']}")
-    print(f"Country: {ip_details['country_name']}")
-    print(f"Latitude: {ip_details['latitude']}")
-    print(f"Longitude: {ip_details['longitude']}")
-    print(f"Postal code: {ip_details['postal']}")
-    print(f"Time zone: {ip_details['timezone']}")
+    if 'region' in ip_details:
+        print(f"Region: {ip_details['region']}")
+    else:
+        print("No region information available for this IP.")
+    if 'country_name' in ip_details:
+        print(f"Country: {ip_details['country_name']}")
+    else:
+        print("No country information available for this IP.")
+
 
 
 # Scan IP address
