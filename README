@@ -2,15 +2,16 @@
 
 The Harry Scanner is a Python script for scanning IP addresses and ports. It uses the ipinfo API to obtain information about the IP address, such as its geographic location, ISP, and timezone. The script then attempts to connect to each specified port and determines whether the port is open or closed. If a port is open, it also retrieves and displays the service banner. The port range can be manually adjusted on line 113 to scan however many wanted. As of default it is set from 1-100.
 
+
 **The ipinfo package requires an access token to use. You can sign up for a free access token at https://ipinfo.io/signup. Once you have your access token, you can replace the existing token in the script with your own token**
+
 
 
 **Requirements**
 
-<details>
-<summary><strong>Requirements</strong></summary>
-
 The following Python libraries are required to run the script:
+
+**Please note that `traceback` and `datetime` are part of Python's standard library and do not need to be installed separately.**
 
 - tqdm
 - socket
@@ -22,44 +23,23 @@ The following Python libraries are required to run the script:
 
 To install the required Python libraries, you can run the following command:
 
-```
-pip install -r requirements.txt
-```
+**pip install -r requirements.txt**
 
 Alternatively, you can install each library individually using pip. For example:
 
-```
-pip install tqdm
-```
+**pip install tqdm**
 
-Please note that `traceback` and `datetime` are part of Python's standard library and do not need to be installed separately.
-
-[![Copy to clipboard](https://camo.githubusercontent.com/ee7643e19cf6dcf246073af44c8d31d95716d6a9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f436f707920746f20636c6970626f6172642d6370616c656e6461722e7376673f6c6f676f3d636c6970266c6162656c) ![Clipboard copy icon](https://img.icons8.com/ios/20/000000/copy.png)](https://github.com/Morestead/TheHarryScanner#requirements)
-
-</details>
 
 
 **Usage**
 
-<details>
-<summary><strong>Usage</strong></summary>
+**python3 TheHarryScanner.py**
 
-```
-python TheHarryScanner.py
-```
-
-You will be prompted to enter the IP address or range of IP addresses you wish to scan.
+You will be prompted to enter the IP address (option 1) or range of IP addresses (option 2) you wish to scan.
 
 To scan a single IP address, enter the IP address in dotted decimal notation (e.g. 192.168.1.1).
 
 To scan a range of IP addresses, enter the starting IP address and ending IP address separated by a hyphen (e.g. 192.168.1.1-192.168.1.255).
-
-</details>
-
-<br>
-
-[![Copy to clipboard](https://camo.githubusercontent.com/ee7643e19cf6dcf246073af44c8d31d95716d6a9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f436f707920746f20636c6970626f6172642d6370616c656e6461722e7376673f6c6f676f3d636c6970266c6162656c) ![Clipboard copy icon](https://img.icons8.com/ios/20/000000/copy.png)](https://github.com/Morestead/TheHarryScanner#usage)
-
 
 When the script completes, it will generate a CSV file with the scan results. The file will include the following columns:
 
@@ -70,9 +50,11 @@ Banner: the banner message returned by the service (if available)
 Date & Time: the date and time that the scan was performed
 
 
+
 **Installation**
 
 Clone the repository or download the script.
+
 
 
 **Conclusion**
@@ -80,9 +62,11 @@ Clone the repository or download the script.
 Overall, The Harry Scanner is a useful tool for network administrators and security professionals who need to quickly scan and gather information about IP addresses and ports.
 
 
+
 **Disclaimer**
 
 This script is for educational purposes only. Use it at your own risk and responsibility. The author is not responsible for any damage or legal consequences caused by the use of this script.
+
 
 
 **Contributing**
@@ -90,9 +74,11 @@ This script is for educational purposes only. Use it at your own risk and respon
 If you'd like to contribute to The Harry Scanner, feel free to open an issue or submit a pull request on the GitHub repository.
 
 
+
 **Authors**
 
 https://github.com/Morestead
+
 
 
 **Acknowledgments**
@@ -104,6 +90,7 @@ https://github.com/Morestead
 - ipaddress (Python standard library)
 - pyfiglet (https://github.com/pwaller/pyfiglet)
 - pytz (https://pythonhosted.org/pytz/)
+
 
 
 **About**
