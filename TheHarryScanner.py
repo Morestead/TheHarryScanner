@@ -6,10 +6,11 @@ import ipinfo
 import ipaddress
 import pyfiglet
 import traceback
+from datetime import datetime
+import pytz
 
 ascii_banner = pyfiglet.figlet_format("THE HARRY SCANNER")
 print(ascii_banner)
-
 
 # Initialize ipinfo client
 def get_ip_details(ip):
@@ -19,31 +20,6 @@ def get_ip_details(ip):
     # Get IP details
     details = handler.getDetails(ip)
     return details.all
-
-
-# Initialize variables
-def scan_ports(ip, ports):
-    results = []
-    open_ports = []
-
-    for port in tqdm.tqdm(ports):
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(0.5)
-            result = sock.connect_ex((ip, port))
-            if result == 0:
-                open_ports.append(port)
-                results.append((ip, port, "Open", ""))
-                print(f"Port {port} is open.")
-            sock.close()
-        except KeyboardInterrupt:
-            print("Scan interrupted by user.")
-            exit()
-        except Exception as e:
-            print(f"Error scanning port {port}: {e}")
-            traceback.print_exc()
-    
-    return open_ports, results
 
 # Geolocate IP address
 def print_details(ip_details):
@@ -60,8 +36,51 @@ def print_details(ip_details):
         print(f"Country: {ip_details['country_name']}")
     else:
         print("No country information available for this IP.")
+    if 'longitude' in ip_details:
+        print(f"Longitude: {ip_details['longitude']}")
+    else:
+        print("No longitude information available for this IP.")
+    if 'latitude' in ip_details:
+        print(f"Latitude: {ip_details['latitude']}")
+    else:
+        print("No latitude information available for this IP.")
+    if 'postal' in ip_details:
+        print(f"Postal code: {ip_details['postal']}")
+    if 'asn' in ip_details:
+        print(f"AS: {ip_details['asn']} {ip_details['org']}")
+    if 'isp' in ip_details:
+        print(f"ISP: {ip_details['isp']}")
+    if 'timezone' in ip_details:
+        tz = pytz.timezone(ip_details['timezone'])
+        dt = datetime.now(tz)
+        print(f"Timezone: {ip_details['timezone']}")
+        print(f"Date: {dt.strftime('%Y-%m-%d')}")
+        print(f"Time: {dt.strftime('%H:%M:%S')}")
 
+# Scan ports
+def scan_ports(ip, ports):
+    results = []
+    open_ports = []
 
+    for port in tqdm.tqdm(ports):
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(0.5)
+            result = sock.connect_ex((ip, port))
+            if result == 0:
+                open_ports.append(port)
+                banner = sock.recv(1024).decode().strip()[:50]
+                results.append((ip, port, "Open", banner))
+                print(f"Port {port} is open. Banner: {banner}")
+            sock.close()
+        except KeyboardInterrupt:
+            print("Scan interrupted by user.")
+            exit()
+        except Exception as e:
+            print(f"Error scanning port {port}: {e}")
+            traceback.print_exc()
+    
+    return open_ports, results
 
 # Scan IP address
 def scan_ip(ip, ports):
@@ -81,15 +100,12 @@ def scan_ip(ip, ports):
 
 # Write results to CSV file
 def write_csv(scan_results, filename):
-    if not filename.endswith(".csv"):
-        filename += ".csv"
-    with open(filename, mode="w") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Host", "Port", "Service", "Banner"])
+    with open(filename, 'a', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Host", "Port", "Service", "Banner", "Date & Time"])
         for result in scan_results:
-            writer.writerow(result)
-    print(f"Results written to CSV file {filename}.")
-
+            dt = datetime.now()
+            writer.writerow(tuple(result) + (dt.strftime('%Y-%m-%d %H:%M:%S'),))
 
 # Initialize variables
 ip = None

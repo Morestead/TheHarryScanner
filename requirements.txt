@@ -1,0 +1,9 @@
+tqdm
+socket
+csv
+ipinfo
+ipaddress
+pyfiglet
+pytz
+
+#Please note that traceback and datetime are part of Python's standard library and do not need to be installed separately.
