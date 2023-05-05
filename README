@@ -39,7 +39,7 @@ You will be prompted to enter the IP address (option 1) or range of IP addresses
 
 To scan a single IP address, enter the IP address in dotted decimal notation (e.g. 192.168.1.1).
 
-To scan a range of IP addresses, enter the starting IP address and ending IP address separated by a hyphen (e.g. 192.168.1.1-192.168.1.255).
+To scan a range of IP addresses, enter the starting IP address and ending IP address separated by a hyphen (e.g. 192.168.1.1/24).
 
 When the script completes, it will generate a CSV file with the scan results. The file will include the following columns:
 
