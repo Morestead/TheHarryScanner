@@ -98,6 +98,7 @@ def scan_ip(ip, ports):
     return scan_results
 
 
+
 # Write results to CSV file
 def write_csv(scan_results, filename):
     with open(filename, 'a', newline='') as csvfile:
@@ -110,7 +111,7 @@ def write_csv(scan_results, filename):
 # Initialize variables
 ip = None
 ip_range = None
-ports = list(range(1, 100))
+ports = list(range(1, 200))
 
 # Ask the user for input
 option = input("Enter '1' to scan a single IP address, or '2' to scan a range of IPs: ")
