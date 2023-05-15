@@ -59,7 +59,6 @@ def print_details(ip_details):
 
 # Scan ports
 def scan_ports(ip, ports):
-    results = []
     open_ports = []
 
     for port in tqdm.tqdm(ports):
@@ -69,9 +68,7 @@ def scan_ports(ip, ports):
             result = sock.connect_ex((ip, port))
             if result == 0:
                 open_ports.append(port)
-                banner = sock.recv(1024).decode().strip()[:50]
-                results.append((ip, port, "Open", banner))
-                print(f"Port {port} is open. Banner: {banner}")
+                print(f"Port {port} is open.")
             sock.close()
         except KeyboardInterrupt:
             print("Scan interrupted by user.")
@@ -80,7 +77,7 @@ def scan_ports(ip, ports):
             print(f"Error scanning port {port}: {e}")
             traceback.print_exc()
     
-    return open_ports, results
+    return open_ports
 
 # Scan IP address
 def scan_ip(ip, ports):
@@ -94,24 +91,26 @@ def scan_ip(ip, ports):
     print(f"Details for IP address {ip}:")
     print_details(ip_details)
 
-    open_ports, scan_results = scan_ports(ip, ports)
-    return scan_results
+    open_ports = scan_ports(ip, ports)  # Retrieve open ports
+    return open_ports
 
-
-
-# Write results to CSV file
-def write_csv(scan_results, filename):
+# Write results to a CSV file
+def write_csv(open_ports, ip, filename):
     with open(filename, 'a', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["Host", "Port", "Service", "Banner", "Date & Time"])
-        for result in scan_results:
+
+        # Write the header
+        writer.writerow(["IP", "Port", "Date & Time"])
+
+        # Write the scan results
+        for port in open_ports:
             dt = datetime.now()
-            writer.writerow(tuple(result) + (dt.strftime('%Y-%m-%d %H:%M:%S'),))
+            writer.writerow([ip, port, dt.strftime('%Y-%m-%d %H:%M:%S')])
 
 # Initialize variables
 ip = None
 ip_range = None
-ports = list(range(1, 200))
+ports = list(range(1, 55))
 
 # Ask the user for input
 option = input("Enter '1' to scan a single IP address, or '2' to scan a range of IPs: ")
@@ -130,24 +129,26 @@ else:
 
 # Scan IP addresses
 if ip:
-    scan_results = scan_ip(ip, ports)
+    open_ports = scan_ip(ip, ports)  # Retrieve open ports
     filename = f"{ip}_scan_results.csv"
+    write_csv(open_ports, ip, filename)  # Write open ports to CSV
 elif ip_range:
     scan_results = []
     for ip in network.hosts():
         ip = str(ip)
         try:
-            scan_results.extend(scan_ip(ip, ports))
+            open_ports = scan_ip(ip, ports)  # Retrieve open ports
+            scan_results.extend(open_ports)
         except KeyboardInterrupt:
             print("Scan interrupted by user.")
             break
-    filename = f"{ip}_scan_results.csv"
+    filename = f"{ip_range}_scan_results.csv"
+    write_csv(scan_results, ip_range, filename)  # Write open ports to CSV
+
 else:
     print("No input provided. Please try again.")
     exit()
 
-# Write results to CSV file
-write_csv(scan_results, filename)
 
 
 
